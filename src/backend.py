@@ -231,7 +231,7 @@ async def upload_clothing_concept(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=error_msg)
 
 
-@app.post("/start-analysis/{temp_path}")
+@app.post("/start-analysis/{temp_path:path}")
 async def start_concept_analysis(temp_path: str):
     """
     Start the comprehensive fashion analysis workflow for an uploaded concept.

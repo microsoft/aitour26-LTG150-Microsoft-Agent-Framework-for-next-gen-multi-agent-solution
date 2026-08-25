@@ -273,19 +273,20 @@ function ZavaConceptAnalyzer() {
      */
     const copyToClipboard = async (text) => {
         try {
-            await navigator.clipboard.writeText(text);
-
-            // Visual feedback for copy action
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Copied!';
-            button.classList.add('copied');
-
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.classList.remove('copied');
-            }, 2000);
-
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                // Fallback for non-secure contexts (e.g. HTTP)
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+            alert('Report copied to clipboard!');
         } catch (error) {
             console.error('Copy failed:', error);
             alert('Failed to copy to clipboard');
